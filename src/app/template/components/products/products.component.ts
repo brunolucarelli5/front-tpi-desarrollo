@@ -1,23 +1,28 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { NavbarComponent } from "../footer/navbar/navbar.component";
 import { ProductsService } from "../../../products.service";
 import { CommonModule } from "@angular/common";
 import { ProductI } from "../../../interfaces/product";
 import { Router } from "@angular/router";
 import { FooterComponent } from "../footer/footer.component";
-
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
-  selector: "app-products",
   standalone: true,
-  imports: [NavbarComponent, CommonModule, FooterComponent],
+  imports: [NavbarComponent, CommonModule, FooterComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatButtonModule],
+  selector: "app-products",
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.css"],
 })
+
 export class ProductsComponent implements OnInit {
-  products: ProductI[] | null = null;
-  sortedProducts: ProductI[] = [];
-  currentSortColumn: string | null = null;
-  sortDirection: "asc" | "desc" = "asc";
+  displayedColumns: string[] = ['name', 'price', 'category', 'actions'];
+  dataSource!: MatTableDataSource<ProductI>;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private productsService: ProductsService,
@@ -26,56 +31,45 @@ export class ProductsComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      this.products = await this.productsService.getProducts();
-      this.sortedProducts = [...this.products]; // Inicializa sortedProducts con una copia de products
-      console.log(this.products);
+      const products = await this.productsService.getProducts();
+      this.dataSource = new MatTableDataSource(products);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      
+      // Configure custom sorting data accessor for 'name' and 'price'
+      this.dataSource.sortingDataAccessor = (product: ProductI, sortHeaderId: string) => {
+        switch (sortHeaderId) {
+          case 'name':
+            return product.name;
+          case 'price':
+            return product.price;
+          default:
+            return '';
+        }
+      };
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   }
 
-  onSort(columnName: string): void {
-    if (this.currentSortColumn === columnName) {
-      this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
-    } else {
-      this.currentSortColumn = columnName;
-      this.sortDirection = "asc";
-    }
-    this.sortProducts();
-  }
-
-  sortProducts(): void {
-    if (!this.products || this.currentSortColumn === null) return;
-
-    this.sortedProducts = [...this.products].sort((a, b) => {
-      const keyA = a[this.currentSortColumn as keyof ProductI];
-      const keyB = b[this.currentSortColumn as keyof ProductI];
-
-      if (keyA < keyB) {
-        return this.sortDirection === "asc" ? -1 : 1;
-      }
-      if (keyA > keyB) {
-        return this.sortDirection === "asc" ? 1 : -1;
-      }
-      return 0;
-    });
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   async deleteProduct(productId: number): Promise<void> {
     try {
       await this.productsService.deleteProduct(productId);
-      // Actualizar la lista de productos después de eliminar
-      this.sortedProducts = this.sortedProducts.filter(
+      // Update product list after deletion
+      this.dataSource.data = this.dataSource.data.filter(
         (product) => product.id !== productId
       );
     } catch (error) {
-      // Manejo de errores
-      console.error("Error al eliminar producto:", error);
-      // Aquí puedes implementar la lógica para mostrar un mensaje de error al usuario
+      console.error("Error deleting product:", error);
     }
   }
 
   editProduct(productId: number): void {
-    this.router.navigate(["editar-producto", productId]);
+    this.router.navigate(["edit-product", productId]);
   }
 }

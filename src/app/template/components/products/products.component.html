@@ -1,61 +1,52 @@
 <app-navbar></app-navbar>
 
-<div class="flex justify-center mt-4 text-2xl md:text-5xl">
-    <h1>Listado de productos</h1>
+<div class="flex justify-center mt-4 text-2xl md:text-5xl font-bold">
+  <h1>Products list</h1>
 </div>
 
 <div class="text-center mx-auto mt-2 mb-4">
-    <p class="text-lg text-gray-700">Si deseas ordenar los productos según algún parámetro, selecciona la columna
-        correspondiente.</p>
+  <p class="text-lg text-gray-700">You can order the products if you want.</p>
 </div>
 
-<div class="flex justify-center items-center mt-5 mb-12">
-    <div class="w-75">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-yellow-100">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 cursor-pointer">Nombre
-                            <span *ngIf="currentSortColumn === 'name'">
-                                <span *ngIf="sortDirection === 'asc'">&#9660;</span>
-                                <span *ngIf="sortDirection === 'desc'">&#9650;</span>
-                            </span>
-                        </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer text-center" (click)="onSort('price')">Precio
-                            <span *ngIf="currentSortColumn === 'price'">
-                                <span *ngIf="sortDirection === 'asc'">&#9660;</span>
-                                <span *ngIf="sortDirection === 'desc'">&#9650;</span>
-                            </span>
-                        </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer text-center" (click)="onSort('category')">Categoría
-                            <span *ngIf="currentSortColumn === 'category'">
-                                <span *ngIf="sortDirection === 'asc'">&#9660;</span>
-                                <span *ngIf="sortDirection === 'desc'">&#9650;</span>
-                            </span>
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let product of sortedProducts" class="bg-white border-b">
-                        <td class="px-6 py-4 text-black font-semibold">{{ product.name }}</td>
-                        <td class="px-6 py-4 text-center">{{ product.price }}</td>
-                        <td class="px-6 py-4 text-center">{{ product.productType ? product.productType.name : 'N/A' }}</td>
-                        <td class="px-6 py-4 text-center">
-                            <button type="button" (click)="deleteProduct(product.id)"
-                                class="text-red-500 hover:text-red-700 focus:outline-none mr-4">
-                                Eliminar   
-                            </button>
-                            <!-- Nuevo botón para editar -->
-                            <button type="button" (click)="editProduct(product.id)"
-                                class="text-blue-500 hover:text-blue-700 focus:outline-none">
-                                Editar
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="flex justify-center mt-5 mb-12">
+  <div class="w-75">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full text-sm text-left rtl:text-right text-gray-500">
+
+        <!-- Header de la tabla -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+          <td mat-cell *matCellDef="let product">${{ product.price }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Product type</th>
+          <td mat-cell *matCellDef="let product">{{ product.productType ? product.productType.name : 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="text-center">Actions</th>
+          <td mat-cell *matCellDef="let product" class="text-center">
+            <button type="button" (click)="deleteProduct(product.id)" class="text-red-500 hover:text-red-700 focus:outline-none mr-4">
+              Delete
+            </button>
+            <button type="button" (click)="editProduct(product.id)" class="text-blue-500 hover:text-blue-700 focus:outline-none">
+              Edit
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[20, 10, 5]" showFirstLastButtons></mat-paginator>
     </div>
+  </div>
 </div>
+
 <app-footer></app-footer>

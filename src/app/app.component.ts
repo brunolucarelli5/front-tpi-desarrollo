@@ -6,7 +6,7 @@ import {ProductsComponent} from "./template/components/products/products.compone
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ProductsComponent],
+  imports: [CommonModule, RouterOutlet, ProductsComponent,],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -3,6 +3,7 @@ import axios from "axios";
 import { HttpErrorResponse } from "@angular/common/http";
 import { ProductI } from "./interfaces/product";
 import { ProductTypeI } from "./interfaces/productType";
+import { AuthService } from "./auth.service";
 
 @Injectable({
   providedIn: "root",
@@ -10,10 +11,11 @@ import { ProductTypeI } from "./interfaces/productType";
 export class ProductsService {
   private url: string = "http://localhost:2999";
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   async getProducts(): Promise<ProductI[]> {
     try {
+      this.authService.refreshToken();
       console.log("Fetching products...");
 
       // Retrieve the token from localStorage

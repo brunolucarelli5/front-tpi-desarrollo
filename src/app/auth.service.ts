@@ -33,7 +33,9 @@ export class AuthService {
   async register(body: RegisterI): Promise<void> {
     let email = body.email;
     try {
+      console.log('Ingresó al try')
       await axios.post(`${this.url}/users/register`, body);
+      console.log("Se intenta registrar")
       await axios.post(`${this.url}/users/${email}/permissions/5`);
     } catch (error) {
       throw new HttpErrorResponse({ error });
@@ -60,7 +62,7 @@ export class AuthService {
       expirationTime: Date | string;
     } = JSON.parse(localStorage.getItem("token") ?? "{refreshToken:''}");
     const response = (
-      await axios.get(`${this.url}/refresh-token`, {
+      await axios.get(`${this.url}/users/refresh-token`, {
         headers: {
           "refresh-token": tokenObject.refreshToken,
         },
