@@ -1,0 +1,39 @@
+<nav class="bg-transparent relative">
+    <div class="max-w-screen-xl flex justify-between items-center mx-auto p-4">
+        <!-- Toggle Button for Mobile -->
+        <button (click)="toggleNavbar()"
+            class="navbar-button inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none hover:scale-110">
+            <span class="sr-only">Open main menu</span>
+            <img class="h-auto w-auto" src="./../../../../assets/img/dropdown.png" alt="">
+        </button>
+        <!-- Logo -->
+        <div class="flex items-center">
+            <img class="h-6 md:h-12 w-auto inline-block mr-4"
+                src="./../../../../assets/img/logo_horizontal_blanco4.png" alt="Company Logo">
+        </div>
+        <!-- Navbar Links -->
+        <div [ngClass]="{'hidden': !navbarOpen, 'flex': navbarOpen}" class="fixed inset-0 z-20 bg-white md:relative md:flex md:w-auto mx-auto text-black md:bg-transparent justify-center items-center" id="navbar-dropdown">
+            <!-- Close Button -->
+            <button (click)="toggleNavbar()" class="absolute top-4 right-4 p-2 text-black bg-transparent hover:text-gray-700 md:hidden">
+                <span class="sr-only">Close menu</span>
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <ul class="flex flex-col font-medium p-4 md:p-0 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 items-center">
+                <li>
+                    <a routerLink="/" class="hover:scale-105 hover:text-yellow-500">Inicio</a>
+                </li>
+                <li>
+                    <a routerLink="/productos" routerLinkActive="active" class="hover:scale-105 hover:text-yellow-500" >Productos</a>
+                </li>
+                <li>
+                    <a routerLink="/crear-producto" class="hover:scale-105 hover:text-yellow-500">Crear producto</a>
+                </li>
+            </ul>
+        </div>
+
+        <button type="button" (click)="logout()"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-auto">
+            Logout
+        </button>
+    </div>
+</nav>

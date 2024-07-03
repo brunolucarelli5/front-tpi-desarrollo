@@ -1,0 +1,36 @@
+.login {
+    min-height: 100vh;
+}
+
+.bg-image {
+    background-image: url('./../../../../assets/img/fondo-login.jpg');
+    background-size: cover;
+}
+
+
+
+.btn-login {
+    font-size: 1rem; /* Adjusted to match signup button size */
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+    background-color: #007bff; /* Primary button color for consistency */
+    border: none; /* Ensures no border for a cleaner look */
+    color: white; /* Text color for readability */
+}
+
+.btn-login:hover {
+    background-color: #0056b3; /* Darker shade on hover for interaction feedback */
+}
+
+.form-control {
+    height: auto;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da; /* Consistent border styling */
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Focus state for accessibility */
+}

@@ -1,0 +1,64 @@
+/* General layout */
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.row.g-0 {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Signup form and its alignment */
+.signup {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for form elements */
+.form-floating {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    height: auto;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button styling */
+.btn-signup {
+    font-size: 1rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+    background-color: #007bff;
+    border: none;
+    color: white;
+}
+
+.btn-signup:hover {
+    background-color: #0056b3;
+}
+
+/* Background image for the right side */
+.bg-image {
+    background-image: url('./../../../../assets/img/fondo-signup.jpg'); /* Adjust the path as necessary */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .d-none.d-md-flex {
+        display: none !important;
+    }
+}
