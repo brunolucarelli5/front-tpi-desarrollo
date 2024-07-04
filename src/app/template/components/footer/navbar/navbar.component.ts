@@ -1,12 +1,13 @@
 import { CommonModule, NgIf } from "@angular/common";
-import { Component, ElementRef, Renderer2 } from "@angular/core";
+import { Component, ElementRef, OnInit, Renderer2 } from "@angular/core";
+import { AuthService } from "../../../../auth.service";
+import { IUser } from "../../../../interfaces/user";
 import {
   ActivatedRoute,
   Router,
   RouterLink,
   RouterOutlet,
 } from "@angular/router";
-import { AuthService } from "../../../../auth.service";
 
 @Component({
   selector: "app-navbar",
@@ -15,17 +16,22 @@ import { AuthService } from "../../../../auth.service";
   templateUrl: "./navbar.component.html",
   styleUrl: "./navbar.component.css",
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   dropdownOpen = false; // Variable to hold the state of the dropdown
   navbarOpen = false; // Variable to hold the state of the navbar
   currentRoute!: string;
+  user: IUser = {firstName: "", lastName: ""};
 
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
+
+  async ngOnInit(): Promise<void> {
+    this.user = await this.authService.getUserFromToken();
+  }
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen; // Toggle the state

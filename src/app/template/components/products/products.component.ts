@@ -9,16 +9,36 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+
+type ColumnKey = 'name' | 'price' | 'category' | 'actions';
+
 @Component({
   standalone: true,
-  imports: [NavbarComponent, CommonModule, FooterComponent, MatTableModule, MatPaginatorModule, MatSortModule, MatButtonModule],
+  imports: [
+    NavbarComponent, 
+    CommonModule,
+    FooterComponent, 
+    MatTableModule, 
+    MatPaginatorModule, 
+    MatSortModule, 
+    MatButtonModule, 
+    MatSlideToggleModule, 
+    FormsModule],
   selector: "app-products",
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.css"],
 })
 
 export class ProductsComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'price', 'category', 'actions'];
+  columnsVisibility: Record<ColumnKey, boolean> = {
+    name: true,
+    price: true,
+    category: true,
+    actions: true
+  };
+  displayedColumns: ColumnKey[] = [];
   dataSource!: MatTableDataSource<ProductI>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -35,18 +55,23 @@ export class ProductsComponent implements OnInit {
       this.dataSource = new MatTableDataSource(products);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      
+
       // Configure custom sorting data accessor for 'name' and 'price'
-      this.dataSource.sortingDataAccessor = (product: ProductI, sortHeaderId: string) => {
-        switch (sortHeaderId) {
-          case 'name':
-            return product.name;
-          case 'price':
-            return product.price;
-          default:
-            return '';
-        }
-      };
+      this.dataSource.sortingDataAccessor = (product: ProductI, sortHeaderId: (string | number)) => {
+          switch (sortHeaderId) {
+            case 'name':
+              return product.name;
+            case 'price':
+              // Convert price to a number to ensure numeric sorting
+              return +product.price;
+            case 'category':
+              return product.productType.name;
+            default:
+              return '';
+          }
+        };
+
+      this.updateDisplayedColumns();
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -70,6 +95,14 @@ export class ProductsComponent implements OnInit {
   }
 
   editProduct(productId: number): void {
-    this.router.navigate(["edit-product", productId]);
+    this.router.navigate(["editar-producto", productId]);
+  }
+
+  updateDisplayedColumns() {
+    this.displayedColumns = (Object.keys(this.columnsVisibility) as ColumnKey[]).filter(key => this.columnsVisibility[key]);
+  }
+
+  columnVisibility() {
+    this.updateDisplayedColumns();
   }
 }

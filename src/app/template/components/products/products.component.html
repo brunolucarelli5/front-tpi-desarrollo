@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="flex justify-center mt-4 text-2xl md:text-5xl font-bold">
+<div class="flex justify-center mt-4 text-2xl md:text-5xl font-semibold">
   <h1>Products list</h1>
 </div>
 
@@ -10,32 +10,39 @@
 
 <div class="flex justify-center mt-5 mb-12">
   <div class="w-75">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table mat-table [dataSource]="dataSource" matSort class="w-full text-sm text-left rtl:text-right text-gray-500">
+    <!-- Column selection checkboxes -->
+    <div class="mb-4 flex gap-3">
+      <mat-slide-toggle color="accent" [(ngModel)]="columnsVisibility.name" (change)="columnVisibility()">Name</mat-slide-toggle>
+      <mat-slide-toggle color="accent" [(ngModel)]="columnsVisibility.price" (change)="columnVisibility()">Price</mat-slide-toggle>
+      <mat-slide-toggle color="accent" [(ngModel)]="columnsVisibility.category" (change)="columnVisibility()">Product type</mat-slide-toggle>
+      <mat-slide-toggle color="accent" [(ngModel)]="columnsVisibility.actions" (change)="columnVisibility()">Actions</mat-slide-toggle>
+    </div>
 
+    <div class="relative overflow-x-auto shadow-lg sm:rounded-lg">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full text-sm text-left rtl:text-right text-gray-500">
         <!-- Header de la tabla -->
-        <ng-container matColumnDef="name">
+        <ng-container *ngIf="columnsVisibility.name" matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
           <td mat-cell *matCellDef="let product">{{ product.name }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="price">
+        <ng-container *ngIf="columnsVisibility.price" matColumnDef="price">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
           <td mat-cell *matCellDef="let product">${{ product.price }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="category">
+        <ng-container *ngIf="columnsVisibility.category" matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Product type</th>
           <td mat-cell *matCellDef="let product">{{ product.productType ? product.productType.name : 'N/A' }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
+        <ng-container *ngIf="columnsVisibility.actions" matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="text-center">Actions</th>
           <td mat-cell *matCellDef="let product" class="text-center">
-            <button type="button" (click)="deleteProduct(product.id)" class="text-red-500 hover:text-red-700 focus:outline-none mr-4">
+            <button type="button" (click)="deleteProduct(product.id)" class="text-red-500 hover:text-red-700 focus:outline-none mr-4 font-bold">
               Delete
             </button>
-            <button type="button" (click)="editProduct(product.id)" class="text-blue-500 hover:text-blue-700 focus:outline-none">
+            <button type="button" (click)="editProduct(product.id)" class="text-blue-500 hover:text-blue-700 focus:outline-none font-bold">
               Edit
             </button>
           </td>

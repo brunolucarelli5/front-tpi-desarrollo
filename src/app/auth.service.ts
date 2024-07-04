@@ -1,9 +1,12 @@
 import { Injectable } from "@angular/core";
-import axios from "axios";
 import { LoginI, RegisterI, TokenI } from "./interfaces/token";
 import { HttpErrorResponse } from "@angular/common/http";
 import { timer } from "rxjs";
+import { IUser } from "./interfaces/user";
+
 import moment from "moment";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: "root",
@@ -91,5 +94,43 @@ export class AuthService {
     } catch (error) {
       throw new HttpErrorResponse({ error });
     }
+  }
+
+  async getUserFromToken(): Promise<{firstName: string; lastName: string}> {
+    const tokenString = localStorage.getItem("token");
+    const tokenObj = tokenString ? JSON.parse(tokenString) : null;
+    const accessToken = tokenObj ? tokenObj.accessToken : null;
+    if (accessToken) {
+      try {
+        const decoded: any = jwtDecode(accessToken);
+        console.log(decoded)
+        const response = await axios.get(`${this.url}/users/${decoded.email}`);
+        console.log(response.data)
+        return response.data;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        throw new HttpErrorResponse({ error });
+      }
+    }
+    throw new HttpErrorResponse({ error: "No token found" });
+  }
+
+  async getttttUserFromToken(): Promise<IUser | null> {
+    const tokenString = localStorage.getItem("token");
+    // Parsear el string a un objeto JSON
+    const tokenObj = tokenString ? JSON.parse(tokenString) : null;
+    // Extraer accessToken
+    const accessToken = tokenObj ? tokenObj.accessToken : null;
+    if (accessToken) {
+      try {
+        console.log('El token es: ', accessToken);
+        const response = await axios.get(`${this.url}/users/token`);
+        return response.data;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
   }
 }

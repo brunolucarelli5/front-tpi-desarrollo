@@ -1,5 +1,5 @@
 <nav class="bg-transparent relative">
-    <div class="max-w-screen-xl flex justify-between items-center mx-auto p-4">
+    <div class="max-w-screen-xl flex justify-between items-center mx-auto h-auto">
         <!-- Toggle Button for Mobile -->
         <button (click)="toggleNavbar()"
             class="navbar-button inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none hover:scale-110">
@@ -20,20 +20,29 @@
             </button>
             <ul class="flex flex-col font-medium p-4 md:p-0 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 items-center">
                 <li>
-                    <a routerLink="/" class="hover:scale-105 hover:text-yellow-500">Home</a>
+                    <button routerLink="/" class="navbar-link">Home</button>
                 </li>
                 <li>
-                    <a routerLink="/productos" routerLinkActive="active" class="hover:scale-105 hover:text-yellow-500" >Products</a>
+                    <button routerLink="/productos" routerLinkActive="active" class="navbar-link">Products</button>
                 </li>
                 <li>
-                    <a routerLink="/crear-producto" class="hover:scale-105 hover:text-yellow-500">Create product</a>
+                    <button routerLink="/crear-producto" class="navbar-link">Create product</button>
                 </li>
             </ul>
         </div>
 
-        <button type="button" (click)="logout()"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-auto">
-            Logout
-        </button>
+        <!-- Wrapper for greeting and logout button -->
+        <div class="flex items-center ml-auto space-x-4">
+            <!-- Display user greeting -->
+            <div>
+                Hello, {{ user.firstName }} {{ user.lastName }}!
+            </div>
+
+            <!-- Custom Logout button -->
+            <button class="Btn" (click)="logout()">
+                <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+                <div class="text">Logout</div>
+            </button>
+        </div>
     </div>
 </nav>
