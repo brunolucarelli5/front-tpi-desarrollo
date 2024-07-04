@@ -8,6 +8,7 @@ import {
 import { Router } from "@angular/router";
 import { AuthService } from "./../../../auth.service";
 import { CommonModule } from "@angular/common";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-signup",
@@ -40,22 +41,32 @@ export class SignupComponent implements OnInit {
   onSubmit(): void {
     if (this.signupForm.valid) {
       const registerData = this.signupForm.value;
+      console.log(registerData);
       // Check if the email is already taken
       if (this.emails.includes(registerData.email)) {
-        alert("El correo electrónico ya está en uso. Por favor, elija otro.");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Email has already been taken. Try with other one",
+        });
         return; // Stop the submission process
       }
       // Proceed with registration if the email is not taken
       this.authService
         .register(registerData)
         .then(() => {
-          alert("Usuario registrado");
-          setTimeout(() => {
-            this.router.navigate(['/iniciar-sesion']);
-          }, 2000);
+          Swal.fire("¡Success!", "User created successfully", "success").then(() => {
+            setTimeout(() => {
+              this.router.navigate(["/iniciar-sesion"]);
+            }, 2000);
+          });
         })
         .catch(() => {
-          alert("Error al registrar nuevo usuario. Intente nuevamente");
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "There was an error creating the user. Try again!",
+          });
         });
     }
   }

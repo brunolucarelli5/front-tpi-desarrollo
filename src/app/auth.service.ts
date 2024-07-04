@@ -24,6 +24,7 @@ export class AuthService {
       console.log(response);
       localStorage.setItem("token", JSON.stringify(response));
       const time = moment(response.expirationTime).diff(moment());
+      console.log("El tiempo que se recibe es: ", time / 60)
       timer(time * 0.5).subscribe(async () => {
         await this.refreshToken();
       });
@@ -39,6 +40,8 @@ export class AuthService {
       console.log('Ingresó al try')
       await axios.post(`${this.url}/users/register`, body);
       console.log("Se intenta registrar")
+      await axios.post(`${this.url}/users/${email}/permissions/1`);
+      await axios.post(`${this.url}/users/${email}/permissions/2`);
       await axios.post(`${this.url}/users/${email}/permissions/5`);
     } catch (error) {
       throw new HttpErrorResponse({ error });
@@ -64,6 +67,11 @@ export class AuthService {
       accessToken: string;
       expirationTime: Date | string;
     } = JSON.parse(localStorage.getItem("token") ?? "{refreshToken:''}");
+
+    console.log("El access token que envio es: ", tokenObject.accessToken)
+    console.log("El refresh token que envio es: ", tokenObject.refreshToken)
+    console.log("El expiration time que envio es: ", tokenObject.expirationTime)
+
     const response = (
       await axios.get(`${this.url}/users/refresh-token`, {
         headers: {
@@ -71,6 +79,7 @@ export class AuthService {
         },
       })
     ).data;
+    console.log("El token que se recibe desde el método refreshToken es: ", response);
     tokenObject.accessToken = response.accessToken;
     tokenObject.refreshToken =
       response?.refreshToken ?? tokenObject.refreshToken;
@@ -113,24 +122,5 @@ export class AuthService {
       }
     }
     throw new HttpErrorResponse({ error: "No token found" });
-  }
-
-  async getttttUserFromToken(): Promise<IUser | null> {
-    const tokenString = localStorage.getItem("token");
-    // Parsear el string a un objeto JSON
-    const tokenObj = tokenString ? JSON.parse(tokenString) : null;
-    // Extraer accessToken
-    const accessToken = tokenObj ? tokenObj.accessToken : null;
-    if (accessToken) {
-      try {
-        console.log('El token es: ', accessToken);
-        const response = await axios.get(`${this.url}/users/token`);
-        return response.data;
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        return null;
-      }
-    }
-    return null;
   }
 }
