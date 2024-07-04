@@ -9,7 +9,7 @@ import { IUser } from "../../interfaces/user";
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [RouterLink, RouterLink, NgClass],
+  imports: [RouterLink, RouterLink, NgClass, NavbarComponent, FooterComponent],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
 })
